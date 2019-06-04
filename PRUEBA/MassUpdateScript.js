@@ -17,7 +17,7 @@ function() {
      * @since 2016.1
      */
     function each(params) {
-
+    	var variable;
     }
 
     return {
