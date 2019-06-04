@@ -18,6 +18,7 @@ function() {
      */
     function each(params) {
     	var variable;
+    	var variabla2;
     }
 
     return {
