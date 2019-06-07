@@ -47,7 +47,8 @@ function(error, record) {
 				})
         	
         	count = saleorder.getLineCount({sublistId: 'item'});
-	 	  	
+    		
+	 	  	/// close the global sale order
 	 	  	for ( var j=0; j < count ; j++){	
 	 	  		
 	 	  		saleorder.setSublistValue({
