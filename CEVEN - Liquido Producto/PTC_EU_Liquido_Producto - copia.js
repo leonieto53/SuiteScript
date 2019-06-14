@@ -34,9 +34,7 @@ function(error,record,redirect) {
 	       var viewForm = true;
            var priceItem;
            var itemtype;
-                     
-           
-	// Delete purchase
+	
 	       lines = registro.getLineCount({
 	         sublistId: 'links' });
 	       var typeRecord;
@@ -110,9 +108,8 @@ function(error,record,redirect) {
       var cta_ord = registro.getValue({fieldId: 'custbody_ctayorden'});
       var orderstatus = registro.getValue({fieldId: 'orderstatus'});
       var subsidiary = registro.getValue({fieldId: 'subsidiary'});
-      // && orderstatus == 'B'
       
-      if (cta_ord == true) {
+      if (cta_ord == true && orderstatus == 'B') {
 
           var defaultForm = registro.getValue({fieldId: 'customform'});
 
@@ -142,9 +139,7 @@ function(error,record,redirect) {
                        fieldId: 'rate',
                        line: i
                    });
-                   
-                   registro.setSublistValue({sublistId: 'item', fieldId: 'porate', line: i, value: priceItem});
-                   
+
                    itemtype = registro.getSublistValue({
                        sublistId: 'item',
                        fieldId: 'itemtype',
@@ -153,7 +148,9 @@ function(error,record,redirect) {
 
                    if (itemtype === "InvtPart" )
                     {
-              	   		itemRecord = record.load({type: record.Type.INVENTORY_ITEM, id: itemId});
+                	   		registro.setSublistValue({sublistId: 'item', fieldId: 'porate', line: i, value: priceItem});
+                	   
+                	   		itemRecord = record.load({type: record.Type.INVENTORY_ITEM, id: itemId});
 
                       		isdropshipitem = itemRecord.getValue({fieldId: 'isdropshipitem'});
                       
@@ -179,6 +176,9 @@ function(error,record,redirect) {
                                     }
                                  }
 
+                                 
+                                 registro.setSublistValue({sublistId: 'item', fieldId: 'rate', line: i, value: priceItem});
+                                // var v = registro.save();
                                  }
                       		else
                       			{
