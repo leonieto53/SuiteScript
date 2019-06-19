@@ -18,17 +18,33 @@ function(record) {
      */
     function each(context) {
     	var recId;
+    	var entity;
+    	var addresId;
+    	
     	var registro = record.load({
 			  type: context.type,
 			  id: context.id
 			})
-  	
+			
+			entity = registro.getValue({fieldId : 'entity'});
+    		
+    		var customer = record.load({
+			  type: record.Type.CUSTOMER,
+			  id: entity
+			})
+    		
+    		
+    		addressId = customer.getSublistValue({sublistId: 'addressbook', fieldId: 'id', line: 1});
+    		
+    		registro.setValue({fieldId : 'shipaddresslist', value : addressId});
+    		
 			count = registro.getLineCount({sublistId: 'item'});
 		
 	  	/// close the global sale order
 	  	for ( var j=0; j < count ; j++){	
 	  		
 	  		registro.setSublistValue({
+               ignoreMandatoryFields: true,
                sublistId: 'item',
                fieldId: 'isclosed',
                line: j,
@@ -39,7 +55,7 @@ function(record) {
 		  	 try {
 		           recId = registro.save();
 		           log.debug({
-		               title: 'Closed PO:',
+		               title: context.type,
 		               details: recId
 		           });
 		       				
