@@ -28,7 +28,7 @@ function customizeGlImpact(transactionRecord, standardLines, customLines, book)
 	    		var description = transactionRecord.getLineItemValue('item', 'description', i);
 	    		
 	    		var item = nlapiLoadRecord('inventoryitem', currentItem);
-	    		account = item.getFieldValue('incomeaccount');
+	    		account = item.getFieldValue('dropshipexpenseaccount');
 	
 	    		var quantity = transactionRecord.getLineItemValue('item', 'quantity', i);
 	    		var rate = transactionRecord.getLineItemValue('item', 'rate', i);
