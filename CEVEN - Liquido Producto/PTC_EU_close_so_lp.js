@@ -53,7 +53,7 @@ function(error, record) {
     			 line: i
     			 });
 	   		
-	   		if (orderdoprev != orderdoc){
+	   		if (orderdoprev != orderdoc && orderdoc != ""){
 	   			purchaseorder = record.load({
 					  type: record.Type.PURCHASE_ORDER,
 					  id: orderdoc
