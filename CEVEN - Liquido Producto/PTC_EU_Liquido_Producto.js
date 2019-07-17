@@ -34,9 +34,7 @@ function(error,record,redirect) {
 	       var viewForm = true;
            var priceItem;
            var itemtype;
-                     
-           
-	// Delete purchase
+	
 	       lines = registro.getLineCount({
 	         sublistId: 'links' });
 	       var typeRecord;
@@ -106,7 +104,7 @@ function(error,record,redirect) {
 
     function beforeSubmit(context) {
 	  
-      var registro = context.newRecord;
+           var registro = context.newRecord;
       var cta_ord = registro.getValue({fieldId: 'custbody_ctayorden'});
       var orderstatus = registro.getValue({fieldId: 'orderstatus'});
       var subsidiary = registro.getValue({fieldId: 'subsidiary'});
