@@ -31,15 +31,25 @@ function(error, record) {
     		  id: context.newRecord.id
     		});
     	
+		var createdfrom = invoice.getValue({fieldId: 'createdfrom'});
+		
+		var len = createdfrom.length;
+		
+		if (createdfrom.length == 0){
+			return false;
+		}
+    	
     	if (invoice.getValue({fieldId: 'entity'}) == '10949'){  
     		
-    		var createdfrom = invoice.getValue({fieldId: 'createdfrom'});
+    		/// close the global sale order
+    		
+/*    		var createdfrom = invoice.getValue({fieldId: 'createdfrom'});
     		
     		var len = createdfrom.length;
     		
     		if (createdfrom.length == 0){
     			return false;
-    		}
+    		}*/
     		
     		saleorder = record.load({
 				  type: record.Type.SALES_ORDER,
@@ -48,7 +58,7 @@ function(error, record) {
         	
         	count = saleorder.getLineCount({sublistId: 'item'});
     		
-	 	  	/// close the global sale order
+	 	  	
 	 	  	for ( var j=0; j < count ; j++){	
 	 	  		
 	 	  		saleorder.setSublistValue({
@@ -73,6 +83,72 @@ function(error, record) {
                     details: e.message
                });
              }
+    	}
+    	
+    	else{
+    		
+    		/// update the purchase order whit number invoice the sale order of client
+    		var linktype;	
+    		var linktypeId;
+    		
+    		saleorder = record.load({
+				  type: record.Type.SALES_ORDER,
+				  id: createdfrom
+				})
+      	
+			count = saleorder.getLineCount({sublistId: 'links'});
+    		
+    		for ( var j=0; j < count ; j++){	
+	 	  				
+    			linktype = saleorder.getSublistValue({
+	                 sublistId: 'links',
+	                 fieldId: 'linktype',
+	                 line: j
+	                 });	
+    			
+	 	  		if (linktype == 'Envío directo'){
+	 	  			
+	 	  			linktypeId = saleorder.getSublistValue({
+		                 sublistId: 'links',
+		                 fieldId: 'id',
+		                 line: j
+		                 });
+	 	  			
+	 	  			purchaseorder = record.load({
+	 					  type: record.Type.PURCHASE_ORDER,
+	 					  id: linktypeId
+	 					});
+	 	  			
+	 	  			purchaseorder.setValue({
+		                 fieldId: 'custbody_ov_facturada',		                 
+		                 value: invoice.id
+		                 });
+	 	  			
+	 	  			purchaseorder.setValue({
+		                 fieldId: 'custbody_facturada',		                 
+		                 value: true
+		                 });
+	 	  			
+	 	  			
+	 	  			try {
+	 	                 recId = purchaseorder.save();
+	 	                 log.debug({
+	 	                     title: 'OV Facturada:',
+	 	                     details: Invoice.id
+	 	                 });
+	 	             				
+	 	             } 
+	 	       		 catch (e) {
+	 	                 log.error({
+	 	                    title: e.name,
+	 	                    details: e.message
+	 	               });
+	 	             }	
+	 	  		}
+	 	  		
+	    	 }
+    		
+    		
     	}
     }
 
